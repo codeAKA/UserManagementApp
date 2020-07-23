@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-user-dialog',
@@ -10,7 +11,11 @@ export class AddUserDialogComponent implements OnInit {
 
   addUserForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<AddUserDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) data
+    ) {
     this.fb.group({
       userName: [''],
       name: [''],
@@ -23,12 +28,12 @@ export class AddUserDialogComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  closeDialog() {
-
+  closeDialog(): void {
+    this.dialogRef.close();
   }
 
-  save() {
-
+  save(): void {
+    this.dialogRef.close(this.addUserForm.value);
   }
 
 }
