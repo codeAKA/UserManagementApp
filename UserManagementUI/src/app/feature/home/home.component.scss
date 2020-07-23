@@ -4,3 +4,11 @@
   justify-content: space-between;
   margin-top: 50px;
 }
+::ng-deep .custom-dialog-class {
+  mat-dialog-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 20px;
+  }
+}

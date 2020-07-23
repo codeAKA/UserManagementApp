@@ -33,7 +33,7 @@ export class HomeService {
       'Content-Type': 'application/json'
     });
     return this.http.post<UserModel>(this.userUrl, user, { headers })
-      .pipe(take(1),
+      .pipe(
         catchError(error => throwError(error.messege)),
         map(response => {
           return { ...response } as UserModel;

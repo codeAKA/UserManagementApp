@@ -10,7 +10,7 @@ namespace UserManagement.BL
         public string Surname { get; set; }
         public string Email { get; set; }
         public DateTime? RegistrationDate { get; set; }
-        public bool Enable { get; set; }
+        public bool? Enable { get; set; }
 
     }
 }

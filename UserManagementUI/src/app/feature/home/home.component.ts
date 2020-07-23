@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { UserModel } from '../models/user.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
+import { UpdateUserDto } from '../models/update-user.dto';
+import { UserDto } from '../models/user.dto';
 
 @Component({
   selector: 'app-home',
@@ -17,20 +19,37 @@ export class HomeComponent implements OnInit {
   constructor(
     private homeService: HomeService,
     private dialog: MatDialog
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.users$ = this.homeService.getAllUsers();
   }
 
-  openAddUserDialog(): void {
+  openAddUserDialog(user?: UpdateUserDto): void {
 
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'custom-dialog-class';
+    dialogConfig.height = '500px';
+    dialogConfig.width = '400px';
+    // if update User with PUT operation
+    dialogConfig.data = user ? { ...user } : {};
 
-    this.dialog.open(AddUserDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(AddUserDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      data => {
+        const dataEnable = (data && data.enable === 'yes') ? true : false;
+        // if update User with PUT operation
+        if (user) {
+          this.homeService.updateUser({...data, enable: dataEnable}, user.id);
+        } else {
+          this.homeService.addUser({...data, enable: dataEnable} as UserDto);
+        }
+      }
+    );
 
   }
 
