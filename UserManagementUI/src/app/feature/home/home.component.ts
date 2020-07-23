@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HomeService } from './home.service';
 import { Observable } from 'rxjs';
-import { UserModel } from '../models/user-model';
+import { UserModel } from '../models/user.model';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
 
