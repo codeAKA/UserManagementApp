@@ -11,7 +11,7 @@ namespace UserManagement.BL.ModelsDTO
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
-        public DateTime RegistrationDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }
         public bool Enable { get; set; }
     }
 }

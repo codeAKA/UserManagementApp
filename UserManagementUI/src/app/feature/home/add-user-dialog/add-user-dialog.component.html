@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Add user</h2>
+
+<mat-dialog-content [formGroup]="addUserForm">
+
+    <mat-form-field>
+        <input matInput placeholder="User Name" formControlName="userName">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Name" formControlName="userName">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Surame" formControlName="userName">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="E-mail" formControlName="userName">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Choose an option</mat-label>
+      <mat-select [disabled]="addUserForm.value">
+        <mat-option value="yes">Yes</mat-option>
+        <mat-option value="no">No</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="closeDialog()">Close</button>
+    <button class="mat-raised-button mat-primary"(click)="save()">Save</button>
+</mat-dialog-actions>

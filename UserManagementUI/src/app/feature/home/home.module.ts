@@ -1,38 +1,43 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-import { HomeService } from './home.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { HomeComponent } from './home.component';
+import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
+import { HomeRoutingModule } from './home-routing.module';
+
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
-
-const routes: Routes = [
-  {
-    path: '',
-    pathMatch: 'full',
-    component: HomeComponent,
-    redirectTo: 'home'
-  },
-];
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    AddUserDialogComponent
   ],
   imports: [
-    RouterModule.forChild(routes),
     CommonModule,
+    HomeRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     // material
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSelectModule
   ],
   providers: [
-    HomeService
+    // HomeService
   ],
   exports: [
-    RouterModule,
     HomeComponent
+  ],
+  entryComponents: [
+    AddUserDialogComponent
   ]
 })
 export class HomeModule { }

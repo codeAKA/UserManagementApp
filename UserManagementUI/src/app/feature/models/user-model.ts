@@ -4,6 +4,6 @@ export interface UserModel {
  name: string;
  surname: string;
  email: string;
- registrationDate: Date;
+ registrationDate?: Date;
  enable: boolean;
 }

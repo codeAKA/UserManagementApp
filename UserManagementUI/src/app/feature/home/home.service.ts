@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserModel } from './../models/user-model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class HomeService {
 
   private userUrl = environment.apiUrl + environment.apiEndpoints.user;
