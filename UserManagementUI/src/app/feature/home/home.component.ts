@@ -46,7 +46,16 @@ export class HomeComponent implements OnInit {
         if (user) {
           this.homeService.updateUser({...data, enable: dataEnable}, user.id);
         } else {
-          this.homeService.addUser({...data, enable: dataEnable} as UserDto);
+          const newUser = {...data, registrationDate: new Date(), enable: dataEnable} as UserDto;
+          // const newUser = {
+          //   username: data.userName,
+          //   name: data.name,
+          //   surname: data.surname,
+          //   email: data.email,
+          //   registrationDate: new Date(),
+          //   enable: dataEnable
+          // } as UserDto;
+          this.homeService.addUser(newUser);
         }
       }
     );

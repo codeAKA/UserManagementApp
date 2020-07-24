@@ -57,7 +57,7 @@ namespace UserManagement.API.Controllers
 
 
         [HttpPost]
-        [Consumes("application/json")]
+        //[Consumes("application/json")]
         public IActionResult CreateUser([FromBody] UserForCreationDto user)
         {
             try

@@ -29,22 +29,19 @@ export class HomeService {
   }
 
   addUser(user: UserDto): Observable<UserModel> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post<UserModel>(this.userUrl, user, { headers })
       .pipe(
         catchError(error => throwError(error.messege)),
         map(response => {
+          console.log(response);
           return { ...response } as UserModel;
         }),
       );
   }
 
   updateUser(user: UserDto, id: number): Observable<UserModel> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.put<UserModel>(`this.userUrl/${id}`, user, { headers })
       .pipe(
         catchError(error => throwError(error.messege)

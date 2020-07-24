@@ -21,7 +21,7 @@ export class AddUserDialogComponent implements OnInit {
   ) {
 
     this.addUserForm = this.fb.group({
-      userName: ['', Validators.required],
+      username: ['', Validators.required],
       name: ['', Validators.required],
       surname: ['', Validators.required],
       email: ['', Validators.required],
@@ -35,7 +35,7 @@ export class AddUserDialogComponent implements OnInit {
     // if update User with PUT operation
     if (this.userToUpdate) {
       this.addUserForm.setValue({
-        userName: this.userToUpdate.username,
+        username: this.userToUpdate.username,
         name: this.userToUpdate.name,
         surname: this.userToUpdate.surname,
         email: this.userToUpdate.email,
