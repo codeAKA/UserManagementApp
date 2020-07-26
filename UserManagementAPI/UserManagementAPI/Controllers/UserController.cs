@@ -8,7 +8,7 @@ using UserManagement.Contracts;
 
 namespace UserManagement.API.Controllers
 {
-    [Route("api/user")]
+    [Route("api/[controller]")]
     public class UserController : Controller
     {
         private IUnityOfWork _repository;
@@ -57,8 +57,8 @@ namespace UserManagement.API.Controllers
 
 
         [HttpPost]
-        //[Consumes("application/json")]
-        public IActionResult CreateUser([FromBody] UserForCreationDto user)
+        [Consumes("application/json")]
+        public IActionResult CreateUser([FromBody]UserForCreationDto user)
         {
             try
             {

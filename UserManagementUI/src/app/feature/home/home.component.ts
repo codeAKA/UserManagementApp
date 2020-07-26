@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HomeService } from './home.service';
 import { Observable } from 'rxjs';
 import { UserModel } from '../models/user.model';
@@ -6,6 +6,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
 import { UpdateUserDto } from '../models/update-user.dto';
 import { UserDto } from '../models/user.dto';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-home',
@@ -15,11 +16,14 @@ import { UserDto } from '../models/user.dto';
 export class HomeComponent implements OnInit {
 
   users$: Observable<UserModel[]>;
+  displayedColumns = ['Username', 'Name', 'Surname', 'E-mail', 'Enable', 'Role', 'Registration date', 'Actions'];
 
   constructor(
     private homeService: HomeService,
     private dialog: MatDialog
   ) { }
+
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   ngOnInit(): void {
     this.users$ = this.homeService.getAllUsers();
@@ -46,7 +50,8 @@ export class HomeComponent implements OnInit {
         if (user) {
           this.homeService.updateUser({...data, enable: dataEnable}, user.id);
         } else {
-          const newUser = {...data, registrationDate: new Date(), enable: dataEnable} as UserDto;
+          // if create User with POST operation
+          const newUser = {...data, enable: dataEnable} as UserDto;
           // const newUser = {
           //   username: data.userName,
           //   name: data.name,
@@ -55,7 +60,9 @@ export class HomeComponent implements OnInit {
           //   registrationDate: new Date(),
           //   enable: dataEnable
           // } as UserDto;
-          this.homeService.addUser(newUser);
+          this.homeService.addUser(newUser).subscribe(
+            u => console.log('Dialog output:', u)
+          );
         }
       }
     );
