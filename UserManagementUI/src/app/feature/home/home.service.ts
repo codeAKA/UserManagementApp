@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from './../../../environments/environment';
 import { Observable, throwError } from 'rxjs';
-import { map, take, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { UserModel } from '../models/user.model';
 import { UserDto } from '../models/user.dto';
 
