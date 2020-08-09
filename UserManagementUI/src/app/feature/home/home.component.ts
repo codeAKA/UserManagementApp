@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { HomeService } from './home.service';
 import { Observable } from 'rxjs';
 import { UserModel } from '../models/user.model';
@@ -7,15 +7,18 @@ import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.compon
 import { UpdateUserDto } from '../models/update-user.dto';
 import { UserDto } from '../models/user.dto';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { take, share } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 
   users$: Observable<UserModel[]>;
+  users: MatTableDataSource<UserModel>;
   displayedColumns = ['Username', 'Name', 'Surname', 'E-mail', 'Enable', 'Role', 'Registration date', 'Actions'];
 
   constructor(
@@ -23,10 +26,23 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog
   ) { }
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   ngOnInit(): void {
-    this.users$ = this.homeService.getAllUsers();
+    this.users$ = this.getUsers();
+    this.users = new MatTableDataSource([]);
+  }
+
+  ngAfterViewInit(): void {
+    this.users$.pipe(take(1))
+      .subscribe(data => {
+        this.users.data = data;
+        this.users.sort = this.sort;
+      });
+  }
+
+  removeUser(id: number): void {
+    this.homeService.removeUser(id).subscribe(res => console.log(res));
   }
 
   openAddUserDialog(user?: UpdateUserDto): void {
@@ -46,27 +62,32 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       data => {
         const dataEnable = (data && data.enable === 'yes') ? true : false;
-        // if update User with PUT operation
         if (user) {
-          this.homeService.updateUser({...data, enable: dataEnable}, user.id);
+          const userRegistrationDate = user.registrationDate ? user.registrationDate : new Date();
+          const userToUpdate: UpdateUserDto = { ...data, userId: user.userId, enable: dataEnable, registrationDate: userRegistrationDate };
+
+          this.homeService.updateUser(user.userId, userToUpdate).subscribe(
+            u => {
+              console.log('Dialog output:', u);
+              // this.users$ = this.homeService.getAllUsers();
+            }
+          );
         } else {
-          // if create User with POST operation
-          const newUser = {...data, enable: dataEnable} as UserDto;
-          // const newUser = {
-          //   username: data.userName,
-          //   name: data.name,
-          //   surname: data.surname,
-          //   email: data.email,
-          //   registrationDate: new Date(),
-          //   enable: dataEnable
-          // } as UserDto;
+          const newUser = { ...data, registrationDate: new Date(), enable: dataEnable } as UserDto;
           this.homeService.addUser(newUser).subscribe(
-            u => console.log('Dialog output:', u)
+            u => {
+              console.log('Dialog output:', u);
+              // this.users$ = this.homeService.getAllUsers();
+            }
           );
         }
       }
     );
 
+  }
+
+  getUsers(): Observable<UserModel[]> {
+    return this.homeService.getAllUsers().pipe(share());
   }
 
 }

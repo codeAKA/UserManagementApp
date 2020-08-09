@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UserDto } from '../../models/user.dto';
+import { UpdateUserDto } from '../../models/update-user.dto';
 
 @Component({
   selector: 'app-add-user-dialog',
@@ -12,7 +12,7 @@ export class AddUserDialogComponent implements OnInit {
 
   addUserForm: FormGroup;
   // if update User with PUT operation
-  userToUpdate: UserDto | null;
+  userToUpdate: UpdateUserDto | null;
 
   constructor(
     private fb: FormBuilder,
@@ -28,7 +28,7 @@ export class AddUserDialogComponent implements OnInit {
       enable: ['', Validators.required]
     });
     // if update User with PUT operation
-    this.userToUpdate = data.description ? { ...data.description } : null;
+    this.userToUpdate = data ? { ...data } : null;
   }
 
   ngOnInit(): void {

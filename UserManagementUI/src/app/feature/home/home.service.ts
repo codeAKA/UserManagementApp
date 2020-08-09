@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { UserModel } from '../models/user.model';
 import { UserDto } from '../models/user.dto';
+import { UpdateUserDto } from '../models/update-user.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -40,19 +41,23 @@ export class HomeService {
       );
   }
 
-  updateUser(user: UserDto, id: number): Observable<UserModel> {
+  updateUser(id: number, user: UpdateUserDto): Observable<UserModel> {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.http.put<UserModel>(`this.userUrl/${id}`, user, { headers })
+    return this.http.put<UserModel>(`${this.userUrl}/${id}`, user, { headers })
       .pipe(
-        catchError(error => throwError(error.messege)
-        ));
+        catchError(error => throwError(error.messege)),
+        map(response => {
+          console.log(response);
+          return { ...response } as UserModel;
+        })
+        );
   }
 
   removeUser(id: number): Observable<{}> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.delete(`this.userUrl/${id}`, { headers })
+    return this.http.delete(`${this.userUrl}/${id}`, { headers })
       .pipe(
         catchError(error => throwError(error.messege)
         ));

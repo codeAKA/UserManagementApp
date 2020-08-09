@@ -1,5 +1,5 @@
 export interface UpdateUserDto {
-  id: number;
+  userId: number;
   username: string;
   name: string;
   surname: string;
