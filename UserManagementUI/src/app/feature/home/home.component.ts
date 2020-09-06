@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { HomeService } from './home.service';
 import { Observable } from 'rxjs';
 import { UserModel } from '../models/user.model';
@@ -13,7 +13,8 @@ import { take, share } from 'rxjs/operators';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
@@ -23,7 +24,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   constructor(
     private homeService: HomeService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -42,7 +44,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   removeUser(id: number): void {
-    this.homeService.removeUser(id).subscribe(res => console.log(res));
+    this.homeService.removeUser(id).subscribe(res => {
+      console.log(res);
+      this.users$ = this.homeService.getAllUsers();
+    });
   }
 
   openAddUserDialog(user?: UpdateUserDto): void {
@@ -69,7 +74,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.homeService.updateUser(user.userId, userToUpdate).subscribe(
             u => {
               console.log('Dialog output:', u);
-              // this.users$ = this.homeService.getAllUsers();
+              this.users$ = this.homeService.getAllUsers();
+              // this.cdr.detectChanges();
             }
           );
         } else {
@@ -77,7 +83,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
           this.homeService.addUser(newUser).subscribe(
             u => {
               console.log('Dialog output:', u);
-              // this.users$ = this.homeService.getAllUsers();
+              this.users$ = this.homeService.getAllUsers();
+              this.cdr.detectChanges();
             }
           );
         }
