@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using UserManagement.BL;
 using UserManagement.Contracts;
 using UserManagement.DAL;
@@ -14,14 +16,14 @@ namespace UserManagement.Repositories
         {
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            return FindAll().OrderBy(user => user.Name).ToList();
+            return await FindAll().OrderBy(user => user.Name).ToListAsync();
         }
 
-        public User GetUserById(int userId)
+        public async Task<User> GetUserByIdAsync(int userId)
         {
-            return FindByCondition(user => user.UserId.Equals(userId)).FirstOrDefault();
+            return await FindByCondition(user => user.UserId.Equals(userId)).FirstOrDefaultAsync();
         }
 
         public void CreateUser(User user)

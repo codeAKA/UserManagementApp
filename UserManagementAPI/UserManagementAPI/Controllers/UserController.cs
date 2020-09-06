@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using UserManagement.BL;
@@ -19,11 +20,11 @@ namespace UserManagement.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetAllUsers()
+        public async Task <IActionResult> GetAllUsers()
         {
             try
             {
-                var users = _repository.User.GetAllUsers();
+                var users = await _repository.User.GetAllUsersAsync();
                 var usersResult = _mapper.Map<IEnumerable<UserDto>>(users);
                 return Ok(usersResult);
             }
@@ -33,11 +34,11 @@ namespace UserManagement.API.Controllers
             }
         }
         [HttpGet("{id}", Name = "UserById")]
-        public IActionResult GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
             try
             {
-                var user = _repository.User.GetUserById(id);
+                var user = await _repository.User.GetUserByIdAsync(id);
                 
                 if (user == null)
                 {
@@ -58,7 +59,7 @@ namespace UserManagement.API.Controllers
 
         [HttpPost]
         [Consumes("application/json")]
-        public IActionResult CreateUser([FromBody]UserForCreationDto user)
+        public async Task<IActionResult> CreateUser([FromBody]UserForCreationDto user)
         {
             try
             {
@@ -75,7 +76,7 @@ namespace UserManagement.API.Controllers
                 var userEntity = _mapper.Map<User>(user);
 
                 _repository.User.CreateUser(userEntity);
-                _repository.Save();
+                await _repository.SaveAsync();
 
                 var createdUser = _mapper.Map<UserDto>(userEntity);
                 return CreatedAtRoute("UserById", new { id = createdUser.UserId }, createdUser);
@@ -87,7 +88,7 @@ namespace UserManagement.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody]UserForUpdateDto user)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody]UserForUpdateDto user)
         {
             try
             {
@@ -101,7 +102,7 @@ namespace UserManagement.API.Controllers
                     return BadRequest("Invalid model object");
                 }
 
-                var userEntity = _repository.User.GetUserById(id);
+                var userEntity = await _repository.User.GetUserByIdAsync(id);
                 if (userEntity == null)
                 {
                     return NotFound();
@@ -110,7 +111,7 @@ namespace UserManagement.API.Controllers
                 _mapper.Map(user, userEntity);
 
                 _repository.User.UpdateUser(userEntity);
-                _repository.Save();
+                await _repository.SaveAsync();
 
                 return NoContent();
             }
@@ -121,18 +122,18 @@ namespace UserManagement.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
             try
             {
-                var user = _repository.User.GetUserById(id);
+                var user = await _repository.User.GetUserByIdAsync(id);
                 if (user == null)
                 {
                     return NotFound();
                 }
 
                 _repository.User.RemoveUser(user);
-                _repository.Save();
+                await _repository.SaveAsync();
 
                 return NoContent();
             }

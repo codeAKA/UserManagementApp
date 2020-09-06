@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using UserManagement.Contracts;
 using UserManagement.DAL;
 
@@ -26,9 +27,9 @@ namespace UserManagement.Repositories
             _appContext = applicationContext;
         }
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _appContext.SaveChanges();
+            await _appContext.SaveChangesAsync();
         }
     }
 }
